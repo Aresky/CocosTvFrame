@@ -17,13 +17,6 @@ NameSpace.register = function(path){
 
 NameSpace.register("st.Scene");
 NameSpace.register("st.View");
+NameSpace.register("st.Control");
 NameSpace.register("st.Widget");
 NameSpace.register("st.Model");
-
-
-// var st = st || {};
-// st.CocosTvFrame = st.CocosTvFrame || {};
-// st.Scene = st.Scene || {};
-// st.View = st.View || {};
-// st.Widget = st.Widget || {};
-// st.Model = st.Model || {};

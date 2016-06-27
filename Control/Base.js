@@ -1,8 +1,6 @@
 
-st.STControl = st.STControl || {};
-
-st.STControl.BaseControl = cc.Node.extend({
-	name: "st.STControl.BaseControl",
+st.Control.BaseControl = cc.Node.extend({
+	name: "st.Control.BaseControl",
 
     ctor: function() {
     	this._super();
