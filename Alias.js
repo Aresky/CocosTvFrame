@@ -12,9 +12,9 @@ st.notify = st.Notification;
 
 
 //Node
-st.attachNodes = st.Utils.Node.attachNodes;
-st.updateNodes = st.Utils.Node.updateNodeState;
-st.debugRect = st.Utils.Node.makeDebugBoundRect;
+st.attachNodes = st.NodeUtil.attachNodes;
+st.updateNodes = st.NodeUtil.updateNodeState;
+st.debugRect = st.NodeUtil.makeDebugBoundRect;
 
 
 //Models

@@ -99,7 +99,7 @@ st.Control.BaseListView = cc.Node.extend({
         //移动
         var _offset = cc.p(this.m_focusFramePosOffset.x,
             this.m_focusFramePosOffset.y - this.m_focusCellIdx * this.m_cellSize.height);
-        var newPos = st.Utils.Node.getPosByDesc(this, {
+        var newPos = st.NodeUtil.getPosByDesc(this, {
             desc: this.m_focusFramePosDesc,
             offset: _offset,
             sc: false
