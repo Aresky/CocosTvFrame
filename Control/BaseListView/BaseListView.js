@@ -104,7 +104,7 @@ st.Control.BaseListView = cc.Node.extend({
             offset: _offset,
             sc: false
         });
-        var move = cc.MoveTo.create(0.5, newPos).easing(cc.easeExponentialOut());
+        var move = cc.MoveTo.create(0.4, newPos).easing(cc.easeExponentialOut());
         //放大
         //var scale = cc.ScaleTo.create(0.03, 1.0, 1.0);
 
