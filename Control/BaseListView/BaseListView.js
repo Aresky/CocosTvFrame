@@ -4,7 +4,7 @@
  * 需要将tableView封装到一个node上，这样才能实现背景红色块移动动效
  */
 
-st.View.BaseListView = cc.Node.extend({
+st.Control.BaseListView = cc.Node.extend({
     ctor: function() {
         this._super();
 
@@ -15,7 +15,7 @@ st.View.BaseListView = cc.Node.extend({
 
         this.setContentSize(this.makeViewSize());
 
-        this.m_listWidget = new st.View.BaseListViewWidget(this);
+        this.m_listWidget = new st.Control.BaseListViewWidget(this);
         this.m_listWidget.setLocalZOrder(2);
         st.attachNodes(this, this.m_listWidget, {
             desc: "lb",
@@ -306,9 +306,9 @@ st.View.BaseListView = cc.Node.extend({
 
 
 //list控件
-st.View.BaseListViewWidget = st.View.BaseListViewWidget || cc.TableView.extend({
+st.Control.BaseListViewWidget = st.Control.BaseListViewWidget || cc.TableView.extend({
     //override
-    name: 'st.View.BaseListViewWidget',
+    name: 'st.Control.BaseListViewWidget',
 
     ctor: function(listener) {
         this.m_listener = listener;

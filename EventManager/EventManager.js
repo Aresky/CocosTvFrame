@@ -54,7 +54,7 @@ st.EventManager = {
 				this.picPlayScene.dispatchEvent(event);
 			}else{
 				var curScene = st.SceneManage.getCurSceneObj();
-				if (curScene) {
+				if (curScene && curScene.dispatchEvent) {
 					curScene.dispatchEvent(event);
 				}
 			}

@@ -3,8 +3,8 @@
 */
 
 
-st.View.BaseListCell = cc.TableViewCell.extend({
-    name:"st.View.BaseListCell",
+st.Control.BaseListCell = cc.TableViewCell.extend({
+    name:"st.Control.BaseListCell",
 
     ctor : function(data, cellSize) {
         this._super();
