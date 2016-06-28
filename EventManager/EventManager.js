@@ -47,11 +47,8 @@ st.EventManager = {
 		var event = this.shiftEvent();
 		if (event) {
 			this.m_curDialog = st.SceneManage.getCurDialog();
-			this.picPlayScene = st.SceneManage.getPicPlayScene();
 			if(this.m_curDialog){
 				this.m_curDialog.dispatchEvent(event);
-			}else if(this.picPlayScene){
-				this.picPlayScene.dispatchEvent(event);
 			}else{
 				var curScene = st.SceneManage.getCurSceneObj();
 				if (curScene && curScene.dispatchEvent) {
