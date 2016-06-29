@@ -30,6 +30,8 @@ st.Control.BaseListView = cc.Node.extend({
         this.m_focusCellIdx = 0;//cell位置焦点
 
         this.m_focused = true; //是否被聚焦
+
+        this.m_adjustLastFocusOffset = 0;//是否纠正最后的聚焦的cell偏移
     },
 
     onEnter: function() {
@@ -40,6 +42,14 @@ st.Control.BaseListView = cc.Node.extend({
 
         this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
         this.m_maxOffset_y = this.m_listWidget.maxContainerOffset().y;
+    },
+
+    /**
+     * 纠正最后的聚焦的cell
+     * @param {[type]} offset 1 代表向上偏移一个cell
+     */
+    setAdjustLastFocusOffset:function(offset){
+        this.m_adjustLastFocusOffset = offset;
     },
 
     //设置焦点框
@@ -60,8 +70,9 @@ st.Control.BaseListView = cc.Node.extend({
     setFocusIdx: function(bAdd) {
         var oldIdx = this.m_focusDataIdx;
         if (bAdd) {
-            if (this.m_focusCellIdx < (this.m_visibleCellCount - 1) &&
-                this.m_focusCellIdx < this.m_datas.length - 1) {
+            if ((this.m_focusCellIdx < (this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset) 
+                || this.m_focusDataIdx === this.m_datas.length - 1 - this.m_adjustLastFocusOffset)
+                && this.m_focusCellIdx < this.m_visibleCellCount - 1) {
                 this.m_focusCellIdx++;
                 this.m_focusDataIdx++;
                 this.updateFocusFramePos(this.m_focusDataIdx - 1);
