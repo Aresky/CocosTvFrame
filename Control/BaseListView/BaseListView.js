@@ -31,7 +31,7 @@ st.Control.BaseListView = cc.Node.extend({
 
         this.m_focused = true; //是否被聚焦
 
-        this.m_adjustLastFocusOffset = 0;//是否纠正最后的聚焦的cell偏移
+        this.m_adjustLastFocusOffset = 1;//是否纠正最后的聚焦的cell偏移
     },
 
     onEnter: function() {
@@ -70,13 +70,14 @@ st.Control.BaseListView = cc.Node.extend({
     setFocusIdx: function(bAdd) {
         var oldIdx = this.m_focusDataIdx;
         if (bAdd) {
-            if ((this.m_focusCellIdx < (this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset) 
-                || this.m_focusDataIdx === this.m_datas.length - 1 - this.m_adjustLastFocusOffset)
-                && this.m_focusCellIdx < this.m_visibleCellCount - 1) {
+            if(this.m_focusDataIdx >= this.m_datas.length - 1) return;
+            if (this.m_focusCellIdx < (this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset)) {
+                //移动焦点框
                 this.m_focusCellIdx++;
                 this.m_focusDataIdx++;
                 this.updateFocusFramePos(this.m_focusDataIdx - 1);
-            } else if (this.m_focusDataIdx < this.m_datas.length - 1) {
+            } else{
+                //滑动listview
                 this.m_focusDataIdx++;
                 this.scrollListView(true);
             }
@@ -135,7 +136,7 @@ st.Control.BaseListView = cc.Node.extend({
         var offset_y = this.m_listWidget.getContentOffset().y;
         var curCell = null;
         if (bAdd) { //向上滑一格
-            offset_y = this.m_minOffset_y + ((this.m_focusDataIdx + 1) - this.m_visibleCellCount) * this.m_cellSize.height;
+            offset_y = this.m_minOffset_y + ((this.m_focusDataIdx + 1 + this.m_adjustLastFocusOffset) - this.m_visibleCellCount) * this.m_cellSize.height;
 
             curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx - 1);
         } else { //向下滑一格
