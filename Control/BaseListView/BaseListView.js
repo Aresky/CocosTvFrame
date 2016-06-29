@@ -185,7 +185,14 @@ st.Control.BaseListView = cc.Node.extend({
         this.m_listWidget.setDatas(datas);
     },
 
-    //刷新数据
+    /**
+     * 刷新数据显示
+     * @param  {[type]} recoverStatus 
+     * {
+     *     dataIdx: 数据序列号 
+     *     posIdx: 位置序列号
+     *  }
+     */
     refreshDataAndReload: function(recoverStatus) {
         if (recoverStatus) {
             this.m_focusDataIdx = recoverStatus.dataIdx;

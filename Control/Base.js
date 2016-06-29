@@ -5,7 +5,8 @@ st.Control.BaseControl = cc.Node.extend({
     ctor: function() {
     	this._super();
 
-    	this.m_focused = false;
+    	this.m_focused = false;//是否被聚焦
+        this.m_enable = true;
     },
 
     //处理得到焦点
@@ -20,6 +21,18 @@ st.Control.BaseControl = cc.Node.extend({
 
     isFocused:function(){
         return this.m_focused;
+    },
+
+    enabled:function(){
+        this.m_enable = true;
+    },
+
+    disabled:function(){
+        this.m_enable = false;
+    },
+
+    isEnable:function(){
+        return this.m_enable;
     },
 
     //设置确认点击回调
