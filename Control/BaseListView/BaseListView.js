@@ -175,10 +175,9 @@ st.Control.BaseListView = cc.Node.extend({
         
     },
 
-    //override
     onTableCellClick: function(dataIdx) {
         if(this.onCellClickedListener){
-            this.onCellClickedListener(dataIdx);
+            this.onCellClickedListener(dataIdx, this.m_focusCellIdx);
         }
     },
 
