@@ -70,7 +70,13 @@ st.Control.BaseListView = cc.Node.extend({
     setFocusIdx: function(bAdd) {
         var oldIdx = this.m_focusDataIdx;
         if (bAdd) {
-            if(this.m_focusDataIdx >= this.m_datas.length - 1) return;
+            if(this.m_focusDataIdx >= this.m_datas.length - 1){
+                var curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
+                if(curCell){
+                    curCell.focusAction();
+                }
+                return;
+            }
             if (this.m_focusCellIdx < (this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset)) {
                 //移动焦点框
                 this.m_focusCellIdx++;
@@ -96,6 +102,11 @@ st.Control.BaseListView = cc.Node.extend({
                 this.onFocusChangeListener(this.m_focusDataIdx);
             }
         }
+
+        var curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
+                if(curCell){
+                    curCell.focusAction();
+                }
     },
 
     //更新焦点框位置
@@ -125,7 +136,9 @@ st.Control.BaseListView = cc.Node.extend({
         this.m_focusFrame.stopAllActions();
         this.m_focusFrame.runAction(cc.Spawn.create(move, cc.CallFunc.create(function() {
             var curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
-            curCell.focusAction();
+            if(curCell){
+                //curCell.focusAction();
+            }
         }.bind(this))));
     },
 
@@ -152,9 +165,9 @@ st.Control.BaseListView = cc.Node.extend({
         if(curCell){
             curCell.unfocusAction();
         }
-        if(newCell){
-            newCell.focusAction();
-        }
+        // if(newCell){
+        //     newCell.focusAction();
+        // }
         
         this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.5);
     },
@@ -452,7 +465,7 @@ st.Control.BaseListViewWidget = st.Control.BaseListViewWidget || cc.TableView.ex
     //     var offset_y = this.getContentOffset().y;
     //     var minOffset_y = this.minContainerOffset().y;
 
-    //     var curFocusIdx = (offset_y - minOffset_y) / cellHeight + this.m_listener.m_focusPosIdx;
+    //     var curFocusIdx = (offset_y - minOffset_y) / cellHeight + this.m_listener.m_focusCellIdx;
     //     st.dump("curFocusIdx", curFocusIdx);
 
     //     this.m_listener.m_focusDataIdx = curFocusIdx;

@@ -30,19 +30,6 @@ st.Control.BaseListCell = cc.TableViewCell.extend({
         this._super();
     },
 
-    // //放大动效
-    // runScaleAction:function(duration, scale){
-    //     this.m_contentNode.runAction(cc.ScaleTo(duration, scale));
-    // },
-
-    // //还原动效
-    // restoreAction:function(duration){
-    //     if(!duration){
-    //         duration = 0.02;
-    //     }
-    //     this.m_contentNode.runAction(cc.ScaleTo(duration, 1));
-    // },
-
     //还原
     restore:function(duration){
         this.m_contentNode.setScale(1.0);
