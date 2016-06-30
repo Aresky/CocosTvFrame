@@ -42,6 +42,8 @@ st.Control.BaseListView = cc.Node.extend({
 
         this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
         this.m_maxOffset_y = this.m_listWidget.maxContainerOffset().y;
+
+        this.updateCellFocus();
     },
 
     /**
@@ -89,6 +91,8 @@ st.Control.BaseListView = cc.Node.extend({
             } else if (this.m_focusDataIdx > 0) {
                 this.m_focusDataIdx--;
                 this.scrollListView(false);
+            } else if(this.m_focusDataIdx <= 0){
+                return; 
             }
         }
         if(oldIdx != this.m_focusDataIdx){
@@ -118,8 +122,6 @@ st.Control.BaseListView = cc.Node.extend({
 
         this.m_focusFrame.stopAllActions();
         this.m_focusFrame.runAction(move);
-
-        this.updateCellFocus(oldFocusIdx);
     },
 
     //滑动listview
@@ -380,7 +382,6 @@ st.Control.BaseListViewWidget = st.Control.BaseListViewWidget || cc.TableView.ex
                 cell = this.createCell(idx);
             }
 
-            cell.restore();
             cell.updateCell(this.arrayModel[idx], idx);
 
         } catch (e) {
