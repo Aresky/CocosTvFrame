@@ -70,13 +70,7 @@ st.Control.BaseListView = cc.Node.extend({
     setFocusIdx: function(bAdd) {
         var oldIdx = this.m_focusDataIdx;
         if (bAdd) {
-            if(this.m_focusDataIdx >= this.m_datas.length - 1){
-                var curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
-                if(curCell){
-                    curCell.focusAction();
-                }
-                return;
-            }
+            if(this.m_focusDataIdx >= this.m_datas.length - 1) return;
             if (this.m_focusCellIdx < (this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset)) {
                 //移动焦点框
                 this.m_focusCellIdx++;
@@ -103,22 +97,13 @@ st.Control.BaseListView = cc.Node.extend({
             }
         }
 
-        var curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
-                if(curCell){
-                    curCell.focusAction();
-                }
+        setTimeout(function(){
+            this.updateCellFocus(oldIdx);
+        }.bind(this), 100);
     },
 
     //更新焦点框位置
     updateFocusFramePos: function(oldFocusIdx) {
-        //旧焦点所在cell还原
-        if (oldFocusIdx || oldFocusIdx === 0) {
-            var oldCell = this.m_listWidget.cellAtIndex(oldFocusIdx);
-            if (oldCell) {
-                oldCell.unfocusAction();
-            }
-        }
-
         //移动
         var _offset = cc.p(this.m_focusFramePosOffset.x,
             this.m_focusFramePosOffset.y - this.m_focusCellIdx * this.m_cellSize.height);
@@ -131,15 +116,10 @@ st.Control.BaseListView = cc.Node.extend({
         //放大
         //var scale = cc.ScaleTo.create(0.03, 1.0, 1.0);
 
-        //延时
-        //var delay = cc.DelayTime.create(0.05);
         this.m_focusFrame.stopAllActions();
-        this.m_focusFrame.runAction(cc.Spawn.create(move, cc.CallFunc.create(function() {
-            var curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
-            if(curCell){
-                //curCell.focusAction();
-            }
-        }.bind(this))));
+        this.m_focusFrame.runAction(move);
+
+        this.updateCellFocus(oldFocusIdx);
     },
 
     //滑动listview
@@ -157,19 +137,9 @@ st.Control.BaseListView = cc.Node.extend({
             curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx + 1);
         }
 
-        this.updateFocusFramePos();
-
-        var newCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
-        //st.ActionManager.runListSkipAction(this.m_listWidget, cc.p(0, offset_y), curCell, newCell, 0.1);
-        
-        if(curCell){
-            curCell.unfocusAction();
-        }
-        // if(newCell){
-        //     newCell.focusAction();
-        // }
-        
         this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.5);
+
+        this.updateFocusFramePos();
     },
 
     //@override
@@ -278,8 +248,18 @@ st.Control.BaseListView = cc.Node.extend({
         return this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
     },
 
-    updateCellAtIndex:function(){
-        this.m_listWidget.updateCellAtIndex(this.m_focusDataIdx);
+    updateCellFocus:function(oldFocusIdx){
+        if(oldFocusIdx || oldFocusIdx === 0){
+            var curCell = this.m_listWidget.cellAtIndex(oldFocusIdx);
+            if(curCell){
+                curCell.unfocusAction();
+            }
+        }
+        
+        var newCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
+        if(newCell){
+            newCell.focusAction();
+        }
     },
 
     onGetFocus: function() {
