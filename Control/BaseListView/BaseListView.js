@@ -300,7 +300,7 @@ st.Control.BaseListView = cc.Node.extend({
                     break;
                 case st.KeyEvent_Enter:
                     if(this.onCellClickedListener){
-                        this.onCellClickedListener(this.m_focusDataIdx);
+                        this.onCellClickedListener(this.m_focusDataIdx, this.m_focusCellIdx);
                     }
                     break;
             }
