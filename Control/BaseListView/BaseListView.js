@@ -123,11 +123,10 @@ st.Control.BaseListView = cc.Node.extend({
         //延时
         //var delay = cc.DelayTime.create(0.05);
         this.m_focusFrame.stopAllActions();
-        // this.m_focusFrame.runAction(cc.Sequence.create(move, cc.CallFunc.create(function() {
-        //     this.scaleCell();
-        // }.bind(this))));
-        
-        this.m_focusFrame.runAction(move);
+        this.m_focusFrame.runAction(cc.Spawn.create(move, cc.CallFunc.create(function() {
+            var curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
+            curCell.focusAction();
+        }.bind(this))));
     },
 
     //滑动listview
@@ -427,48 +426,48 @@ st.Control.BaseListViewWidget = st.Control.BaseListViewWidget || cc.TableView.ex
         //this.m_timeOut = setTimeout(this.onAfterScrollView.bind(this) ,50);
     },
 
-    onAfterScrollView:function(){
+    // onAfterScrollView:function(){
 
-        var cellHeight = this.makeCellSize().height;
-        // this.m_minOffset_y = this.minContainerOffset().y;
-        var offset_y = this.getContentOffset().y;
-        var offset_y_abs = Math.abs(offset_y);
-        // var curCell = null;
-        // offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height; 
+    //     var cellHeight = this.makeCellSize().height;
+    //     // this.m_minOffset_y = this.minContainerOffset().y;
+    //     var offset_y = this.getContentOffset().y;
+    //     var offset_y_abs = Math.abs(offset_y);
+    //     // var curCell = null;
+    //     // offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height; 
         
-        var yu = offset_y_abs % cellHeight;
-        if(yu > 0 &&  yu >= cellHeight / 2){
-            //向下回弹
-            this.setContentOffset(cc.p(0, offset_y - (cellHeight - offset_y_abs % cellHeight)));
-        }else if(yu > 0 && yu < cellHeight / 2){
-            //向上回弹
-            this.setContentOffset(cc.p(0, offset_y + (offset_y_abs % cellHeight)));
-        }
+    //     var yu = offset_y_abs % cellHeight;
+    //     if(yu > 0 &&  yu >= cellHeight / 2){
+    //         //向下回弹
+    //         this.setContentOffset(cc.p(0, offset_y - (cellHeight - offset_y_abs % cellHeight)));
+    //     }else if(yu > 0 && yu < cellHeight / 2){
+    //         //向上回弹
+    //         this.setContentOffset(cc.p(0, offset_y + (offset_y_abs % cellHeight)));
+    //     }
 
-        this.onOffsetFinished();
-    },
+    //     this.onOffsetFinished();
+    // },
 
-    onOffsetFinished:function(){
-        var cellHeight = this.makeCellSize().height;
-        var offset_y = this.getContentOffset().y;
-        var minOffset_y = this.minContainerOffset().y;
+    // onOffsetFinished:function(){
+    //     var cellHeight = this.makeCellSize().height;
+    //     var offset_y = this.getContentOffset().y;
+    //     var minOffset_y = this.minContainerOffset().y;
 
-        var curFocusIdx = (offset_y - minOffset_y) / cellHeight + this.m_listener.m_focusPosIdx;
-        st.dump("curFocusIdx", curFocusIdx);
+    //     var curFocusIdx = (offset_y - minOffset_y) / cellHeight + this.m_listener.m_focusPosIdx;
+    //     st.dump("curFocusIdx", curFocusIdx);
 
-        this.m_listener.m_focusDataIdx = curFocusIdx;
+    //     this.m_listener.m_focusDataIdx = curFocusIdx;
 
-        var curCell = this.cellAtIndex(curFocusIdx);
-        curCell.focusAction();
+    //     var curCell = this.cellAtIndex(curFocusIdx);
+    //     curCell.focusAction();
 
-        for(var i = 0; i < this.arrayModel.length; i++){
-            curCell = this.cellAtIndex(i);
-            if(curCell && i != curFocusIdx){
-                curCell.restore();
-            }
-        }
+    //     for(var i = 0; i < this.arrayModel.length; i++){
+    //         curCell = this.cellAtIndex(i);
+    //         if(curCell && i != curFocusIdx){
+    //             curCell.restore();
+    //         }
+    //     }
 
-    },
+    // },
 
     tableCellTouched:function(table, cell){
         this.m_listener.onTableCellClick(cell.getIdx());

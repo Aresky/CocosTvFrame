@@ -55,11 +55,11 @@ st.Control.BaseListCell = cc.TableViewCell.extend({
 
     //@override 聚焦动效
     focusAction:function(){
-        
+        st.log("focusAction");   
     },
 
     //@override 失焦动效
     unfocusAction:function(){
-
+        st.log("unfocusAction");
     }
 });
