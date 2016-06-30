@@ -20,6 +20,8 @@ st.Control.BaseListCell = cc.TableViewCell.extend({
             offset: cc.p(cellSize.width / 2, cellSize.height / 2),
             sc: false
         });
+
+        this.m_isFocused = false;
     },
 
     onEnter : function() {
@@ -30,9 +32,18 @@ st.Control.BaseListCell = cc.TableViewCell.extend({
         this._super();
     },
 
-    //还原
-    restore:function(duration){
-        this.m_contentNode.setScale(1.0);
+    onGetFocus:function(){
+        if(!this.m_isFocused){
+            this.m_isFocused = true;
+            this.focusAction();
+        }
+    },
+
+    onLostFocus:function(){
+        if(this.m_isFocused){
+            this.m_isFocused = false;
+            this.unfocusAction();
+        }
     },
 
     //@override
@@ -42,7 +53,7 @@ st.Control.BaseListCell = cc.TableViewCell.extend({
 
     //@override 聚焦动效
     focusAction:function(){
-        st.log("focusAction");   
+        st.log("focusAction");
     },
 
     //@override 失焦动效

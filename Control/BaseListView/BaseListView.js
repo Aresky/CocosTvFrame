@@ -252,13 +252,13 @@ st.Control.BaseListView = cc.Node.extend({
         if(oldFocusIdx || oldFocusIdx === 0){
             var curCell = this.m_listWidget.cellAtIndex(oldFocusIdx);
             if(curCell){
-                curCell.unfocusAction();
+                curCell.onLostFocus();
             }
         }
         
         var newCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
         if(newCell){
-            newCell.focusAction();
+            newCell.onGetFocus();
         }
     },
 
