@@ -128,15 +128,10 @@ st.Control.BaseListView = cc.Node.extend({
     scrollListView: function(bAdd) {
         this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
         var offset_y = this.m_listWidget.getContentOffset().y;
-        var curCell = null;
         if (bAdd) { //向上滑一格
             offset_y = this.m_minOffset_y + ((this.m_focusDataIdx + 1 + this.m_adjustLastFocusOffset) - this.m_visibleCellCount) * this.m_cellSize.height;
-
-            curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx - 1);
         } else { //向下滑一格
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
-
-            curCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx + 1);
         }
 
         this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.5);
@@ -245,10 +240,6 @@ st.Control.BaseListView = cc.Node.extend({
         status.dataIdx = this.m_focusDataIdx;
         status.posIdx = this.m_focusCellIdx;
         return status;
-    },
-
-    getCurFocusCell: function() {
-        return this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
     },
 
     updateCellFocus:function(oldFocusIdx){
@@ -382,7 +373,7 @@ st.Control.BaseListViewWidget = st.Control.BaseListViewWidget || cc.TableView.ex
             if (!cell) {
                 cell = this.createCell(idx);
             }
-
+            cell.onLostFocus();
             cell.updateCell(this.arrayModel[idx], idx);
 
         } catch (e) {
