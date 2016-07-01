@@ -232,6 +232,7 @@ st.Control.BaseListView = cc.Node.extend({
         }
         
         this.updateFocusFramePos();
+        this.updateCellFocus();
     },
 
     //获取当前list状态信息，包括焦点位置，数据位置
