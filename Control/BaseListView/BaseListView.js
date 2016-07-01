@@ -31,7 +31,7 @@ st.Control.BaseListView = cc.Node.extend({
 
         this.m_focused = true; //是否被聚焦
 
-        this.m_adjustLastFocusOffset = 1;//是否纠正最后的聚焦的cell偏移
+        this.m_adjustLastFocusOffset = 0;//是否纠正最后的聚焦的cell偏移
     },
 
     onEnter: function() {
@@ -207,14 +207,14 @@ st.Control.BaseListView = cc.Node.extend({
         if (this.m_focusDataIdx > 0) {
             this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
             var offset_y = this.m_listWidget.getContentOffset().y;
-            var curCell = null;
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
-
-            this.m_listWidget.setContentOffset(cc.p(0, offset_y));
+            this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0);
         }
-        
-        this.updateFocusFramePos();
-        this.updateCellFocus();
+
+        setTimeout(function(){
+            this.updateFocusFramePos();
+            this.updateCellFocus();
+        }.bind(this), 50);
     },
 
     //滚到指定数据位
@@ -225,7 +225,6 @@ st.Control.BaseListView = cc.Node.extend({
         if (this.m_focusDataIdx > 0) {
             this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
             var offset_y = this.m_listWidget.getContentOffset().y;
-            var curCell = null;
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
 
             this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.6);
