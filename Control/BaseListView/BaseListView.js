@@ -219,6 +219,7 @@ st.Control.BaseListView = cc.Node.extend({
         }
         
         this.updateFocusFramePos();
+        this.updateCellFocus();
     },
 
     //滚到指定数据位
