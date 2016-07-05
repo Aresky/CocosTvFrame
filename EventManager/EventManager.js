@@ -55,6 +55,12 @@ st.EventManager = {
 					curScene.dispatchEvent(event);
 				}
 			}
+			//临时的，for微鲸本地播放的旧按键响应逻辑
+			if(_listLayer){
+				_listLayer.dispatchEvent(event);
+			} else {
+				keyController.keyDown(event.getKey());
+			}
 		}
 	},
 
@@ -111,6 +117,7 @@ st.EventManager = {
 			var eventObj = null;
 			var event = null;
 			switch (key) {
+				case cc.KEY.dpadCenter:
 				case cc.KEY.enter:
 				case 160: //leshi
 					event = st.KeyEvent_Enter;

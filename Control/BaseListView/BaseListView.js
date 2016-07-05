@@ -154,6 +154,10 @@ st.Control.BaseListView = cc.Node.extend({
         
     },
 
+    getCurCell: function(){
+        return this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
+    },
+
     onTableCellClick: function(dataIdx) {
         if(this.onCellClickedListener){
             this.onCellClickedListener(dataIdx, this.m_focusCellIdx);
@@ -208,13 +212,15 @@ st.Control.BaseListView = cc.Node.extend({
             this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
             var offset_y = this.m_listWidget.getContentOffset().y;
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
-            this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0);
+            this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.1);
+            setTimeout(function(){
+                this.updateFocusFramePos();
+                this.updateCellFocus();
+            }.bind(this), 200);
         }
 
-        setTimeout(function(){
-            this.updateFocusFramePos();
-            this.updateCellFocus();
-        }.bind(this), 50);
+        this.updateFocusFramePos();
+        this.updateCellFocus();
     },
 
     //滚到指定数据位
@@ -222,7 +228,7 @@ st.Control.BaseListView = cc.Node.extend({
         this.m_focusDataIdx = focusDataIdx;
         this.m_focusCellIdx = focusCellIdx;
 
-        if (this.m_focusDataIdx > 0) {
+        if (this.m_focusDataIdx >= 0) {
             this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
             var offset_y = this.m_listWidget.getContentOffset().y;
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
@@ -251,7 +257,7 @@ st.Control.BaseListView = cc.Node.extend({
         }
         
         var newCell = this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
-        if(newCell){
+        if(newCell && this.m_focused){
             newCell.onGetFocus();
         }
     },
