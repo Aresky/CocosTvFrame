@@ -32,6 +32,11 @@ st.Control.BaseListView = cc.Node.extend({
         this.m_focused = true; //是否被聚焦
 
         this.m_adjustLastFocusOffset = 0;//是否纠正最后的聚焦的cell偏移
+
+        this.m_focusFrame = cc.Node.create();
+        this.m_focusFramePosOffset = cc.p(0, 0);
+        this.m_focusFramePosDesc = "lt";
+        this.setFocusFrame(this.m_focusFrame);
     },
 
     onEnter: function() {
@@ -158,6 +163,10 @@ st.Control.BaseListView = cc.Node.extend({
         return this.m_listWidget.cellAtIndex(this.m_focusDataIdx);
     },
 
+    getCellByIdx:function(dataIdx){
+        return this.m_listWidget.cellAtIndex(dataIdx);
+    },
+
     onTableCellClick: function(dataIdx) {
         if(this.onCellClickedListener){
             this.onCellClickedListener(dataIdx, this.m_focusCellIdx);
@@ -174,6 +183,7 @@ st.Control.BaseListView = cc.Node.extend({
         this.onCellClickedListener = listener;
     },
 
+    //override
     setDatas: function(datas) {
         this.m_datas = datas;
         this.m_listWidget.setDatas(datas);
@@ -225,8 +235,17 @@ st.Control.BaseListView = cc.Node.extend({
 
     //滚到指定数据位
     scrollByIdx:function(focusDataIdx, focusCellIdx){
+        var oldIdx = this.m_focusDataIdx;
+
         this.m_focusDataIdx = focusDataIdx;
-        this.m_focusCellIdx = focusCellIdx;
+        
+        if(this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset < 0){
+            this.m_focusCellIdx = 0
+        }else if(focusCellIdx > this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset){
+            this.m_focusCellIdx = this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset;
+        }else{
+            this.m_focusCellIdx = focusCellIdx;
+        }
 
         if (this.m_focusDataIdx >= 0) {
             this.m_minOffset_y = this.m_listWidget.minContainerOffset().y;
@@ -237,7 +256,7 @@ st.Control.BaseListView = cc.Node.extend({
         }
         
         this.updateFocusFramePos();
-        this.updateCellFocus();
+        this.updateCellFocus(oldIdx);
     },
 
     //获取当前list状态信息，包括焦点位置，数据位置
