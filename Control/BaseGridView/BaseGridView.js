@@ -119,6 +119,14 @@ st.Control.BaseGridView = st.Control.BaseListView.extend({
 			newCell.onGetFocus(referenceIdx);
 			newCell.setLocalZOrder(1);
 		}
+
+		this.m_preferedIdx = -1;
+	},
+
+	scrollByIdx:function(_focusDataIdx, focusCellIdx){
+		var focusDataIdx = Math.floor(_focusDataIdx / this.m_columnItemNum);
+		this.m_preferedIdx = _focusDataIdx % this.m_columnItemNum;
+		this._super(focusDataIdx, focusCellIdx);	
 	},
 
 	onFocusEdge: function(eventKey) {
