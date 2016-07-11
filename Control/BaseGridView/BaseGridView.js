@@ -78,12 +78,12 @@ st.Control.BaseGridView = st.Control.BaseListView.extend({
 			this.m_columnItemNum, this.m_columnItemClass, this.m_datas[idx]);
 	},
 
-	getCurStatus: function(){
+	getCurStatus: function() {
 
 		var status = {};
-        status.dataIdx = this.m_focusDataIdx*4 +this.getCurCell().getColumnItemFocusIdx();
-        status.posIdx = this.m_focusCellIdx;
-        return status;
+		status.dataIdx = this.m_focusDataIdx * this.m_columnItemNum + this.getCurCell().getColumnItemFocusIdx();
+		status.posIdx = this.m_focusCellIdx;
+		return status;
 	},
 
 	//override
@@ -131,30 +131,50 @@ st.Control.BaseGridView = st.Control.BaseListView.extend({
 		this.m_preferedIdx = -1;
 	},
 
-	refreshDataAndReload:function(recoverStatus){ //pos1,6
-		if(!recoverStatus){
+	refreshDataAndReload: function(recoverStatus) { //pos1,6
+		if (!recoverStatus) {
 
 			recoverStatus = {};
 			recoverStatus.dataIdx = 0;
 			recoverStatus.posIdx = 0;
-		}  
+		}
 		this.m_preferedIdx = recoverStatus.dataIdx % this.m_columnItemNum;
 		recoverStatus.dataIdx = Math.floor(recoverStatus.dataIdx / this.m_columnItemNum);
 		this._super(recoverStatus);
 	},
 
-	scrollByIdx:function(_focusDataIdx, focusCellIdx){
+	scrollByIdx: function(_focusDataIdx, focusCellIdx) {
 		var focusDataIdx = Math.floor(_focusDataIdx / this.m_columnItemNum);
 		this.m_preferedIdx = _focusDataIdx % this.m_columnItemNum;
-		this._super(focusDataIdx, focusCellIdx);	
+		this._super(focusDataIdx, focusCellIdx);
 	},
 
 	onFocusEdge: function(eventKey) {
+		var curCell = this.getCurCell();
+		var columnItemFocusIdx = curCell.getColumnItemFocusIdx();
+
+		var dataIdx = this.m_focusDataIdx * this.m_columnItemNum + columnItemFocusIdx;
+		var cellIdx = this.m_focusCellIdx;
+
 		if (eventKey === st.KeyEvent_Left && this.m_focusDataIdx > 0) {
-			var focusCellIdx = this.m_focusCellIdx - 1 >= 0 ? this.m_focusCellIdx - 1 : 0;
-			this.scrollByIdx(this.m_focusDataIdx - 1, focusCellIdx);
-		} else if (eventKey === st.KeyEvent_Right && this.m_focusDataIdx < this.m_datas.length - 1 && this.m_focusCellIdx < this.m_visibleCellCount - 1) {
-			this.scrollByIdx(this.m_focusDataIdx + 1, this.m_focusCellIdx + 1);
+
+			dataIdx -= 1;
+
+			if (this.m_focusCellIdx > 0) {
+				cellIdx = this.m_focusCellIdx - 1;
+			}
+
+			this.scrollByIdx(dataIdx, cellIdx);
+
+		} else if (eventKey === st.KeyEvent_Right && this.m_focusDataIdx < this.m_datas.length - 1) {
+
+			dataIdx += 1;
+
+			if (this.m_focusCellIdx < this.m_visibleCellCount - 1 - this.m_adjustLastFocusOffset) {
+				cellIdx = this.m_focusCellIdx + 1;
+			}
+
+			this.scrollByIdx(dataIdx, cellIdx);
 		}
 	},
 
