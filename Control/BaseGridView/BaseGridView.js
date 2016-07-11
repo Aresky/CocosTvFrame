@@ -132,7 +132,6 @@ st.Control.BaseGridView = st.Control.BaseListView.extend({
 	},
 
 	refreshDataAndReload:function(recoverStatus){ //pos1,6
-
 		if(!recoverStatus){
 
 			recoverStatus = {};

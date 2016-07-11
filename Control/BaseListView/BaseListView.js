@@ -227,10 +227,10 @@ st.Control.BaseListView = cc.Node.extend({
                 this.updateFocusFramePos();
                 this.updateCellFocus();
             }.bind(this), 200);
+        }else{
+            this.updateFocusFramePos();
+            this.updateCellFocus();
         }
-
-        this.updateFocusFramePos();
-        this.updateCellFocus();
     },
 
     //滚到指定数据位
