@@ -2,7 +2,7 @@
  * 网格视图单行item视图
  */
 st.Control.BaseGridItem = cc.TableViewCell.extend({
-    ctor: function(cellSize, columnItemSize, columnItemNum, columnItemClass) {
+    ctor: function(cellSize, columnItemSize, columnItemNum, columnItemClass, model) {
         this._super();
 
         this.m_cellSize = cellSize;
@@ -11,7 +11,7 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
 
         this.setContentSize(cellSize);
 
-        this.m_data = null;
+        this.m_data = model;
 
         //列焦点序列号
         this.m_columnItemFocusIdx = 0;
@@ -29,7 +29,7 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
         var start_x = (this.m_cellSize.width - this.m_columnItemSize.width * this.m_columnItemNum) / 2;
         this.m_columnItems = new Array();
         for (var i = 0; i < this.m_columnItemNum; i++) {
-            var columnItem = new this.m_columnItemClass(this.m_columnItemSize);
+            var columnItem = new this.m_columnItemClass(this.m_columnItemSize, this.m_data[i]);
             columnItem.setAnchorPoint(cc.p(0.5, 0.5));
             st.attachNodes(this, columnItem, {
                 desc: "lc",
@@ -101,6 +101,7 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
             oldItem = this.m_columnItems[this.m_columnItemFocusIdx--];
             newItem = this.m_columnItems[this.m_columnItemFocusIdx];
             //st.ActionManager.runSkipAction(oldItem, newItem, 0.06, 1.0);
+
         } else if (!direction && this.m_columnItemFocusIdx < this.m_data.length - 1) {
             oldItem = this.m_columnItems[this.m_columnItemFocusIdx++];
             newItem = this.m_columnItems[this.m_columnItemFocusIdx];
