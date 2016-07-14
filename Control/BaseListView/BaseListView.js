@@ -275,10 +275,14 @@ st.Control.BaseListView = cc.Node.extend({
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
 
             this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.6);
+            setTimeout(function(){
+                this.updateFocusFramePosImmediately();
+                this.updateCellFocus();
+            }.bind(this), 200);
+        }else{
+            this.updateFocusFramePos();
+            this.updateCellFocus(oldIdx);
         }
-        
-        this.updateFocusFramePos();
-        this.updateCellFocus(oldIdx);
     },
 
     //获取当前list状态信息，包括焦点位置，数据位置
