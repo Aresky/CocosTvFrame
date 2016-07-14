@@ -29,6 +29,10 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
         var start_x = (this.m_cellSize.width - this.m_columnItemSize.width * this.m_columnItemNum) / 2;
         this.m_columnItems = new Array();
         for (var i = 0; i < this.m_columnItemNum; i++) {
+            if(i >= this.m_data.length){
+                break;
+            }
+
             var columnItem = new this.m_columnItemClass(this.m_columnItemSize, this.m_data[i]);
             columnItem.setAnchorPoint(cc.p(0.5, 0.5));
             st.attachNodes(this, columnItem, {
@@ -73,14 +77,49 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
 
     //处理失去焦点
     onLostFocus: function() {
-        this.m_columnItems[this.m_columnItemFocusIdx].onLostFocus();
+        if(this.m_columnItemFocusIdx < this.m_columnItems.length){
+            this.m_columnItems[this.m_columnItemFocusIdx].onLostFocus();
+        }
+        
     },
 
     //@override
     updateCell: function(_data, idx) {
         this.m_data = _data;
 
+
+        var _diffLength = this.m_columnItems.length - this.m_data.length;
+        var start_x = (this.m_cellSize.width - this.m_columnItemSize.width * this.m_columnItemNum) / 2;
+        if(_diffLength >0){
+            //remove
+            var removedItems = this.m_columnItems.splice(-_diffLength);
+ 
+            for(var i=0;i < removedItems.length;i++){
+                removedItems[i].setVisible(false);
+            }
+        } else if(_diffLength <0){
+            //add
+            _diffLength = Math.abs(_diffLength);
+            var _length = this.m_columnItems.length;
+            for(var i=0;i <_diffLength; i++){
+                var _addData = this.m_data[_length+i];
+                var columnItem = new this.m_columnItemClass(this.m_columnItemSize, _addData);
+                columnItem.setAnchorPoint(cc.p(0.5, 0.5));
+                st.attachNodes(this, columnItem, {
+                    desc: "lc",
+                    offset: cc.p(start_x + this.m_columnItemSize.width / 2 + (_length+i) * this.m_columnItemSize.width, 0),
+                    sc: false
+                });
+                columnItem.setVisible(false);
+                this.m_columnItems.push(columnItem);
+            }
+        }
+
         for (var i = 0; i < this.m_columnItemNum; i++) {
+            if(i >= this.m_data.length){
+                break;
+            }
+
             this.m_columnItems[i].setVisible(false);
             if (_data[i] !== null && _data[i] !== undefined) {
                 this.m_columnItems[i].setVisible(true);

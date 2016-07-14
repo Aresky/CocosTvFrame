@@ -71,6 +71,8 @@ st.Control.BaseListView = cc.Node.extend({
             offset: this.m_focusFramePosOffset,
             sc: false
         });
+
+        this.m_focusFrame.setVisible(false);
     },
 
     //设置焦点序列 @bAdd 序列号增减
@@ -111,6 +113,27 @@ st.Control.BaseListView = cc.Node.extend({
         }.bind(this), 100);
     },
 
+    updateFocusFramePosImmediately:function(){
+        //移动
+        var _offset = cc.p(this.m_focusFramePosOffset.x,
+            this.m_focusFramePosOffset.y - this.m_focusCellIdx * this.m_cellSize.height);
+        var newPos = st.NodeUtil.getPosByDesc(this, {
+            desc: this.m_focusFramePosDesc,
+            offset: _offset,
+            sc: false
+        });
+        //var move =  cc.MoveTo.create(0.4, newPos).easing(cc.easeExponentialOut());
+
+        //this.m_focusFrame.stopAllActions();
+        this.m_focusFrame.setPosition(newPos); 
+
+        if (this.m_datas.length <= 0) {
+            this.m_focusFrame.setVisible(false);
+        } else if (this.m_focused) {
+            this.m_focusFrame.setVisible(true);
+        }
+    },
+
     //更新焦点框位置
     updateFocusFramePos: function(oldFocusIdx) {
         //移动
@@ -121,7 +144,8 @@ st.Control.BaseListView = cc.Node.extend({
             offset: _offset,
             sc: false
         });
-        var move = cc.MoveTo.create(0.4, newPos).easing(cc.easeExponentialOut());
+        var move =  cc.MoveTo.create(0.4, newPos).easing(cc.easeExponentialOut());
+
         //放大
         //var scale = cc.ScaleTo.create(0.03, 1.0, 1.0);
 
@@ -198,6 +222,8 @@ st.Control.BaseListView = cc.Node.extend({
      *  }
      */
     refreshDataAndReload: function(recoverStatus) {
+        this.m_focusFrame.setVisible(false);
+
         if (recoverStatus) {
             this.m_focusDataIdx = recoverStatus.dataIdx;
             this.m_focusCellIdx = recoverStatus.posIdx;
@@ -207,12 +233,6 @@ st.Control.BaseListView = cc.Node.extend({
         }
 
         this.m_listWidget.reloadData();
-
-        if (this.m_datas.length <= 0) {
-            this.m_focusFrame.setVisible(false);
-        } else if (this.m_focused) {
-            this.m_focusFrame.setVisible(true);
-        }
 
         if(this.onFocusChangeListener){
             this.onFocusChangeListener(this.m_focusDataIdx);
@@ -224,11 +244,13 @@ st.Control.BaseListView = cc.Node.extend({
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
             this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.1);
             setTimeout(function(){
-                this.updateFocusFramePos();
+                //this.updateFocusFramePos();
+                this.updateFocusFramePosImmediately();
                 this.updateCellFocus();
             }.bind(this), 200);
         }else{
-            this.updateFocusFramePos();
+            //this.updateFocusFramePos();
+            this.updateFocusFramePosImmediately();
             this.updateCellFocus();
         }
     },

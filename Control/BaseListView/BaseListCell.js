@@ -33,17 +33,17 @@ st.Control.BaseListCell = cc.TableViewCell.extend({
     },
 
     onGetFocus:function(){
-        if(!this.m_isFocused){
+        //if(!this.m_isFocused){
             this.m_isFocused = true;
             this.focusAction();
-        }
+        //}
     },
 
     onLostFocus:function(){
-        if(this.m_isFocused){
+        //if(this.m_isFocused){
             this.m_isFocused = false;
             this.unfocusAction();
-        }
+        //}
     },
 
     //@override
