@@ -163,7 +163,7 @@ st.Control.BaseListView = cc.Node.extend({
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
         }
 
-        this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.5);
+        this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 1.0);
 
         this.updateFocusFramePos();
     },
@@ -274,10 +274,10 @@ st.Control.BaseListView = cc.Node.extend({
             var offset_y = this.m_listWidget.getContentOffset().y;
             offset_y = this.m_minOffset_y + (this.m_focusDataIdx - this.m_focusCellIdx) * this.m_cellSize.height;
 
-            this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 0.6);
+            this.m_listWidget.setContentOffsetInDuration(cc.p(0, offset_y), 1.0);
             setTimeout(function(){
                 this.updateFocusFramePosImmediately();
-                this.updateCellFocus();
+                this.updateCellFocus(oldIdx);
             }.bind(this), 200);
         }else{
             this.updateFocusFramePos();
