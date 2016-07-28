@@ -536,9 +536,10 @@ st.NodeUtil.screenShot = function(lbPoint, blurSize){
 //生成高斯模糊图
 //@_sprite  图片地址或者sprite对象
 st.NodeUtil.blurSpriteWithPath = function(_sprite){
-    //获取垂直模糊shader
-    var _getBlurShader_v = function(){
-        var shader = cc.GLProgram.create("res/shader/blur.vsh", "res/shader/blur_v.fsh");
+
+    //测试用高斯模糊算法
+    var gaussianBlurShader = function(){
+        var shader = cc.GLProgram.create("res/shader/blur.vsh", "res/shader/gaussian_blur.fsh");
         shader.retain();
         shader.addAttribute(cc.ATTRIBUTE_NAME_POSITION, cc.VERTEX_ATTRIB_POSITION);
         shader.addAttribute(cc.ATTRIBUTE_NAME_COLOR, cc.VERTEX_ATTRIB_COLOR);
@@ -547,38 +548,6 @@ st.NodeUtil.blurSpriteWithPath = function(_sprite){
         shader.updateUniforms();
 
         return shader;        
-    };
-
-    //获取水平模糊shader
-    var _getBlurShader_h = function(){
-        var shader = cc.GLProgram.create("res/shader/blur.vsh", "res/shader/blur_h.fsh");
-        shader.retain();
-        shader.addAttribute(cc.ATTRIBUTE_NAME_POSITION, cc.VERTEX_ATTRIB_POSITION);
-        shader.addAttribute(cc.ATTRIBUTE_NAME_COLOR, cc.VERTEX_ATTRIB_COLOR);
-        shader.addAttribute(cc.ATTRIBUTE_NAME_TEX_COORD, cc.VERTEX_ATTRIB_TEX_COORDS);
-        shader.link();
-        shader.updateUniforms();
-
-        return shader;        
-    };
-
-    //计算权重
-    var _calculateGaussianWeights = function(points){
-        var dx = 1.0 / (points-1);
-        var sigma = 1.0 / 3.0;
-        var norm = 1.0 / (Math.sqrt(2.0 * Math.PI) * sigma * points);
-        var divsigma2 = 0.5 / (sigma * sigma);
-        
-        var weights = new Array(points);
-        weights[0] = 1.0;
-        for(var i = 1; i < points; i++)
-        {
-            var x = i * dx;
-            weights[i] = norm * Math.exp(-x * x * divsigma2);
-            weights[0] -= 2.0 * weights[i];
-        }
-
-        return weights;
     };
 
     if( 'opengl' in cc.sys.capabilities ) {
@@ -588,45 +557,40 @@ st.NodeUtil.blurSpriteWithPath = function(_sprite){
         }else if(_sprite instanceof String){
             sprite = cc.Sprite.create(spritePath);
         }else{
-            return;
+            return null;
         }
 
-        var textureSize = sprite.getContentSize();
+        var textureSize = cc.size(sprite.getContentSize().width * sprite.getScaleX(), 
+            sprite.getContentSize().height * sprite.getScaleY());
 
-        var shader_h = _getBlurShader_h();
-        var shader_v = _getBlurShader_v();
-
-        sprite.setShaderProgram(shader_h);
-        sprite.setAnchorPoint(cc.p(0,0));
+    
+        var blurShader = gaussianBlurShader();
+        sprite.setShaderProgram(blurShader);
+        sprite.setAnchorPoint(cc.p(0, 0));
         var rend = new cc.RenderTexture(textureSize.width, textureSize.height);
-        //if (!rend) return;
-
+        if (!rend) return null;
+    
         rend.begin();
         sprite.visit();
         rend.end();
 
-        var stepY = cc.Sprite.createWithTexture(rend.getSprite().getTexture());
-        stepY.setAnchorPoint(cc.p(0.5,0.5));
-        stepY.retain();
-        //stepY.setFlippedY(true);
-        stepY.setShaderProgram(shader_v);
+        //sprite.retain();
 
-        return stepY;
+        //return sprite;
 
-        // rend = new cc.RenderTexture(textureSize.width, textureSize.height);
-        // //if (!rend) return;
-        // rend.begin();
-        // stepY.visit();
-        // rend.end();
-
-        // // var ret = rend.saveToFile("render.jpg", cc.IMAGE_FORMAT_JPEG);
-        // // if(ret){
-        // //     jsb.fileUtils.addSearchPath(jsb.fileUtils.getWritablePath());
-        // //     //st.dump("filePath", jsb.fileUtils.fullPathForFilename("render.jpg"));
-        // //     return cc.Sprite.create(jsb.fileUtils.fullPathForFilename("render.jpg"));
-        // // }
-
-        // return cc.Sprite.createWithTexture(rend.getSprite().getTexture());
+        // var ret = rend.saveToFile("render.png", cc.IMAGE_FORMAT_PNG);
+        // if(ret){
+        //     // st.dump("jsb.fileUtils.getWritablePath()", jsb.fileUtils.getWritablePath());
+        //     // jsb.fileUtils.addSearchPath("/sdcard/", false);
+        //     // st.dump("getSearchPaths", jsb.fileUtils.getSearchPaths());
+        //     // st.dump("filePath", jsb.fileUtils.fullPathForFilename("render.png"));
+        //     return cc.Sprite.create(jsb.fileUtils.getWritablePath()+"/render.png");
+        // }
+        rend.getSprite().getTexture().setAntiAliasTexParameters();
+        var ret = cc.Sprite.createWithTexture(rend.getSprite().getTexture(), 
+            cc.rect(0, 0, textureSize.width, textureSize.height), false);
+        ret.setFlippedY(true);
+        return ret;
     }
 }
 
