@@ -42,8 +42,6 @@ st.Control.BaseControl = cc.Node.extend({
 
     //响应确认点击
     onClick:function(){
-        st.dump("this.m_clickCallBack",this.m_clickCallBack);
-        st.dump("this.m_focused", this.m_focused);
     	if(this.m_clickCallBack && this.m_focused){
     		this.m_clickCallBack();
     	}
