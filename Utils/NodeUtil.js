@@ -533,9 +533,12 @@ st.NodeUtil.screenShot = function(lbPoint, blurSize){
                 cc.rect(lbPoint.x, lbPoint.y, blurSize.width, blurSize.height), false);
 }
 
-//生成高斯模糊图
-//@_sprite  图片地址或者sprite对象
-st.NodeUtil.blurSpriteWithPath = function(_sprite){
+/**
+ * 生成高斯模糊图
+ * @_sprite  图片地址或者sprite对象
+ * @cultForScreen boolean 是否剪裁以适应屏幕分辨率
+ */
+st.NodeUtil.blurSpriteWithPath = function(_sprite, cultForScreen){
 
     //测试用高斯模糊算法
     var gaussianBlurShader = function(){
@@ -586,13 +589,47 @@ st.NodeUtil.blurSpriteWithPath = function(_sprite){
         //     // st.dump("filePath", jsb.fileUtils.fullPathForFilename("render.png"));
         //     return cc.Sprite.create(jsb.fileUtils.getWritablePath()+"/render.png");
         // }
+        
+        var rect = cc.rect(0, 0, textureSize.width, textureSize.height);
+        if(cultForScreen){
+            rect = st.NodeUtil.cultForScreen(textureSize);
+        }
+
         rend.getSprite().getTexture().setAntiAliasTexParameters();
         var ret = cc.Sprite.createWithTexture(rend.getSprite().getTexture(), 
-            cc.rect(0, 0, textureSize.width, textureSize.height), false);
+            rect, false);
         ret.setFlippedY(true);
         return ret;
     }
 }
+
+/**
+ * 裁剪出适应屏幕分辨率的尺寸
+ * @return {[rect]} 
+ */
+st.NodeUtil.cultForScreen = function(originSize){
+    var width = cc.winSize.width;
+    var height = cc.winSize.height;
+
+    var visibleWidth = originSize.width;
+    var visibleHeight = originSize.height;
+    
+    var visibelLeft = 0;
+    var visibleTop = 0;
+
+    if ( originSize.width * height  > width * originSize.height ) {
+        visibleWidth = originSize.height * width / height;
+        visibleHeight = originSize.height;
+    } else if ( originSize.width * height  < width * originSize.height ) {
+        visibleWidth = originSize.width;
+        visibleHeight = originSize.width * height / width;
+    }
+
+    visibelLeft = (originSize.width - visibleWidth) / 2;
+    visibleTop = (originSize.height - visibleHeight) / 2;
+
+    return cc.rect(visibelLeft, visibleTop, visibleWidth, visibleHeight);
+},
 
 //sprite倒影特效处理
 st.NodeUtil.invertedSprite = function(_sprite){
