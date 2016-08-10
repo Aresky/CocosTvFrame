@@ -19,7 +19,7 @@ st.EventManager = {
 		cc.eventManager.addCustomListener(cc.game.EVENT_HIDE, function(){  
 		    var event = new st.Model.EventModel(-1, st.CustomEvent_ToBack, cc.EventListener.CUSTOM);
 		    var curScene = st.SceneManage.getCurSceneObj();
-				if (curScene) {
+				if (curScene && curScene.dispatchEvent) {
 					curScene.dispatchEvent(event);
 				}
 		}.bind(this));  
@@ -27,7 +27,7 @@ st.EventManager = {
 		cc.eventManager.addCustomListener(cc.game.EVENT_SHOW, function(){  
 		    var event = new st.Model.EventModel(-1, st.CustomEvent_ToFront, cc.EventListener.CUSTOM);
 		    var curScene = st.SceneManage.getCurSceneObj();
-				if (curScene) {
+				if (curScene && curScene.dispatchEvent) {
 					curScene.dispatchEvent(event);
 				}
 		}.bind(this)); 

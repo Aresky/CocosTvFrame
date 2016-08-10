@@ -9,7 +9,7 @@ st.SceneManage = {
 		m_bLoading : false,
 
 		//场景切换
-		replaceScene: function(nextSceneClass, args, transitionClass, transitionType) {
+		replaceScene: function(nextSceneClass, args) {
 			st.dump("arguments", arguments);
 
 			var nextScene = null;
@@ -28,18 +28,6 @@ st.SceneManage = {
 					sceneObj: nextScene,
 					param: arguments[1]
 				});
-			}else if(arguments.length === 4){
-				nextScene = new nextSceneClass(arguments[1]);
-
-				this.m_sceneStack.push({
-					sceneClass: nextSceneClass,
-					sceneObj: nextScene,
-					param: arguments[1]
-				});
-
-				var transition = new transitionClass(1.0, nextScene, transitionType);
-				cc.director.replaceScene(transition);
-				return;
 			}
 
 			if(nextScene){
@@ -47,16 +35,37 @@ st.SceneManage = {
 			}
 		},
 
+		replaceSceneWithTransition:function(nextSceneClass, args){
+			var nextScene = new nextSceneClass(args);
+			var ts = new cc.TransitionCrossFade(0.2,nextScene);
+			if(nextScene){
+				this.m_sceneStack.push({
+					sceneClass: nextSceneClass,
+					sceneObj: nextScene,
+					param: args,
+					withTransition:true
+				});
+				cc.director.replaceScene(ts);
+			}
+		},
+
 		//返回上一个场景
 		goBack: function() {
 			this.m_sceneStack.pop();
-			var curSceneInfo = this.m_sceneStack.pop();
-			var preSceneClass = curSceneInfo.sceneClass;
+			var preSceneInfo = this.m_sceneStack.pop();
+			var preSceneClass = preSceneInfo.sceneClass;
+			var withTransition = preSceneInfo.withTransition;
 			if (preSceneClass) {
-				if (curSceneInfo.param) {
-					this.replaceScene(preSceneClass, curSceneInfo.param);
+				if (preSceneInfo.param) {
+					this.replaceScene(preSceneClass, preSceneInfo.param);
 				} else {
 					this.replaceScene(preSceneClass);
+				}
+			}else if(withTransition){
+				if (preSceneInfo.param) {
+					this.replaceSceneWithTransition(preSceneClass, preSceneInfo.param);
+				} else {
+					this.replaceSceneWithTransition(preSceneClass);
 				}
 			}
 		},

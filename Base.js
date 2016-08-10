@@ -20,3 +20,4 @@ NameSpace.register("st.View");
 NameSpace.register("st.Control");
 NameSpace.register("st.Widget");
 NameSpace.register("st.Model");
+NameSpace.register("st.DataManage");

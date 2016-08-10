@@ -31,4 +31,7 @@ st.KeyEventAction_LongPress = 1 << 2;
 st.CustomEvent_ToBack  = 1;
 st.CustomEvent_ToFront = 2;
 
+//Notification事件
+st.Const_Notification_Event_Default = 1001;
 
+st.Const_Notification_Event_DownImageSucess = st.Const_Notification_Event_Default + 1;

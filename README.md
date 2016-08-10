@@ -16,5 +16,7 @@
 "src/CocosTvFrame/SceneManager/SceneManager.js",
 "src/CocosTvFrame/Utils/LogUtil.js",
 "src/CocosTvFrame/Utils/NodeUtil.js",
+"src/CocosTvFrame/Utils/CommonUtil.js",
 "src/CocosTvFrame/Prototype/String.js",
+"src/CocosTvFrame/RemoteImageManage.js",
 "src/CocosTvFrame/Alias.js",

@@ -23,8 +23,11 @@ st.NodeUtil.attachNodes = function(parentNode, childNode, posDesc, cfgObj) {
         childNode.setPosition(_pos);
     }
 
-    if (cfgObj) {
+    if (cfgObj && cfgObj.zOrder) {
         childNode.setLocalZOrder(cfgObj.zOrder);
+    }
+
+    if(cfgObj && cfgObj.tag){
         childNode.setTag(cfgObj.tag);
     }
 
