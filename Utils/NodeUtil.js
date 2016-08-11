@@ -48,8 +48,11 @@ st.NodeUtil.updateNodeState = function (childNode, posDesc, cfgObj) {
     }
 
 
-    if (cfgObj) {
+    if (cfgObj && cfgObj.zOrder) {
         childNode.setLocalZOrder(cfgObj.zOrder);
+    }
+
+    if(cfgObj && cfgObj.tag){
         childNode.setTag(cfgObj.tag);
     }
 };
@@ -270,23 +273,31 @@ st.NodeUtil.makeDebugBound = function(node) {
     st.NodeUtil.makeDebugPoint(node);
 };
 
-st.NodeUtil.replaceNode = function(ccbNode, nodeTag, newNode,noReplaceAnchor,noScale){
-	var oldNode = ccbNode.getChildByTag(nodeTag);
+/**
+ * 替换节点
+ * @param  {[type]} parentNode      所属父节点
+ * @param  {[type]} nodeTag         节点tag
+ * @param  {[type]} newNode         新节点
+ * @param  {[type]} noReplaceAnchor 不替换锚点
+ * @param  {[type]} noScale         不替换缩放
+ */
+st.NodeUtil.replaceNode = function(parentNode, nodeTag, newNode, noReplaceAnchor, noScale){
+	var oldNode = parentNode.getChildByTag(nodeTag);
 	var newNodeAnchor = newNode.getAnchorPoint();
 	st.assert(oldNode, "xs.Utils.Node.replaceNode oldNode error!", nodeTag);
 
 	newNode.setPosition(oldNode.getPosition());
-	newNode.setAnchorPoint(oldNode.getAnchorPoint());
 	newNode.setTag(oldNode.getTag());
 	newNode.setLocalZOrder(oldNode.getLocalZOrder());
-	if(noScale){
+    newNode.setOpacity(oldNode.getOpacity());
+	if(!noScale){
 		newNode.setScale(oldNode.getScale());
 	}
+    if(!noReplaceAnchor){
+        newNode.setAnchorPoint(oldNode.getAnchorPoint());
+    }
 	oldNode.removeFromParent();
-	ccbNode.addChild(newNode);
-	if(noReplaceAnchor){
-		newNode.setAnchorPoint(newNodeAnchor);
-	};
+	parentNode.addChild(newNode);
 };
 
 //坐标系之间坐标转换
