@@ -10,25 +10,15 @@ st.SceneManage = {
 
 		//场景切换
 		replaceScene: function(nextSceneClass, args) {
-			st.dump("arguments", arguments);
+			st.dump("args", args);
 
-			var nextScene = null;
-			if(arguments.length === 1){
-				nextScene = new nextSceneClass();
+			var nextScene = new nextSceneClass(args);
 
-				this.m_sceneStack.push({
-					sceneClass: nextSceneClass,
-					sceneObj: nextScene
-				});
-			}else if(arguments.length === 2){
-				nextScene = new nextSceneClass(arguments[1]);
-
-				this.m_sceneStack.push({
-					sceneClass: nextSceneClass,
-					sceneObj: nextScene,
-					param: arguments[1]
-				});
-			}
+			this.m_sceneStack.push({
+				sceneClass: nextSceneClass,
+				sceneObj: nextScene,
+				param: args
+			});
 
 			if(nextScene){
 				cc.director.replaceScene(nextScene);
@@ -55,6 +45,7 @@ st.SceneManage = {
 			var preSceneInfo = this.m_sceneStack.pop();
 			var preSceneClass = preSceneInfo.sceneClass;
 			var withTransition = preSceneInfo.withTransition;
+			st.dump("preSceneInfo", preSceneInfo);
 			if (preSceneClass) {
 				if (preSceneInfo.param) {
 					this.replaceScene(preSceneClass, preSceneInfo.param);

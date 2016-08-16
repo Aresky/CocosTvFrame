@@ -124,7 +124,7 @@ st.Control.BaseGridView = st.Control.BaseListView.extend({
 			if (this.m_preferedIdx != -1) {
 				referenceIdx = this.m_preferedIdx;
 			}
-			newCell.onGetFocus(referenceIdx);
+			newCell.onGetFocus(referenceIdx, this.focusChangedCB.bind(this));
 			newCell.setLocalZOrder(1);
 		}
 
@@ -192,10 +192,34 @@ st.Control.BaseGridView = st.Control.BaseListView.extend({
 					this.onFocusEdge(eventKey);
 				}
 			} else {
-				curCell.dispatchEvent(event);
+
+				curCell.dispatchEvent(event, this.focusChangedCB.bind(this));
+					
 			}
 		} else {
 			this._super(event);
 		}
-	}
+	},
+
+	getFocusData: function(){
+		var focusItem = this.getCurCell();
+		var columnItemFocusIdx = focusItem.getColumnItemFocusIdx();
+		return this.m_datas[this.m_focusDataIdx][columnItemFocusIdx]
+	},
+
+    setOnFocusChangeListener:function(listener){
+        this.onFocusChangeListener = listener;
+    },
+
+    focusChangedCB: function(){
+    	//cc.log("focus changed cb");
+    	if(this.onFocusChangeListener){
+    		this.onFocusChangeListener();
+    	}
+    },
+    onExit: function(){
+        this._super();
+
+        this.removeAllChildren(true);
+    }
 });

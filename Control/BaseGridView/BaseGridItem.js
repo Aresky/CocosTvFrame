@@ -64,7 +64,7 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
     },
 
     //处理获取焦点
-    onGetFocus: function(columnFocusIdx) {
+    onGetFocus: function(columnFocusIdx, cb) {
         if (columnFocusIdx !== null && columnFocusIdx !== undefined) {
             if (columnFocusIdx > this.m_data.length - 1) {
                 this.m_columnItemFocusIdx = this.m_data.length - 1;
@@ -72,7 +72,7 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
                 this.m_columnItemFocusIdx = columnFocusIdx;
             }
         }
-        this.m_columnItems[this.m_columnItemFocusIdx].onGetFocus();
+        this.m_columnItems[this.m_columnItemFocusIdx].onGetFocus(cb);
     },
 
     //处理失去焦点
@@ -133,7 +133,7 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
      * 设置列item的焦点
      * @param  {bool} direction 方向 true为left, false为right
      */
-    updateColumnItemPos: function(direction) {
+    updateColumnItemPos: function(direction, cb) {
         var oldItem = null;
         var newItem = null;
         if (direction && this.m_columnItemFocusIdx > 0) {
@@ -150,19 +150,19 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
             oldItem.onLostFocus();
         }
         if (newItem) {
-            newItem.onGetFocus();
+            newItem.onGetFocus(cb);
         }
     },
 
-    dispatchEvent: function(event) {
+    dispatchEvent: function(event, cb) {
         var eventKey = event.getEvent();
         switch (eventKey) {
             case st.KeyEvent_Left:
-                this.updateColumnItemPos(true);
+                this.updateColumnItemPos(true, cb);
                 break;
             case st.KeyEvent_Right:
-                this.updateColumnItemPos(false);
+                this.updateColumnItemPos(false, cb);
                 break;
         }
-    }
+    } 
 });

@@ -19,8 +19,13 @@ st.DataManage.RemoteImageManage = cc.Class.extend({
 		// }
 		this.m_downLoadStack = []; //缓存所有图片的请求，请求完成时需要删掉
 
+		this.m_base64RequestStack = [];//缓存所有base64图片的请求，完成时删掉
+
 		//图片下载监听
-		st.notify.addObserver(this, this.onDownImageSucess, st.Const_Notification_Event_DownImageSucess);
+		st.notify.addObserver(this, this.onDownLoadImageSucess, st.Const_Notification_Event_DownImageSucess);
+
+		//base64图片数据返回
+		st.notify.addObserver(this, this.onRequestBlurImageSucess, st.Const_Notification_Event_BlurImageSucess);
 	},
 
 	//获取图片
@@ -119,22 +124,83 @@ st.DataManage.RemoteImageManage = cc.Class.extend({
 		}
 	},
 
+	//下载图片模糊处理后回传
+	loadBlurImgSprite:function(url, imageArea, callBack){
+		//检查sd卡缓存中是否有此图片文件，有就模糊处理
+		var filePath = st.js2java.checkImageExist(url);
+		if (filePath === "") {
+			//没有,去下载
+			st.log("没有,去下载");
+			var req = {};
+			req.url = url;
+			req.callBack = callBack;
+			req.blur = true;
+
+			this.m_downLoadStack.push(req);
+
+			st.js2java.downLoadImage(url);
+		} else {
+			//有,去请求模糊图的base64数据
+			st.log("有,请求base64数据");
+			var req = {};
+			req.path = filePath;
+			req.callBack = callBack;
+			this.m_base64RequestStack.push(req);
+			st.js2java.getBlurImage(filePath)
+		}
+	},
+
+	//处理base64图片数据请求完成
+	onRequestBlurImageSucess:function(imageData){
+		st.dump("onRequestBlurImageSucess", imageData);
+
+		var index = -1;
+
+		for(var i = 0; i < this.m_base64RequestStack.length; i++){
+			var obj = this.m_base64RequestStack[i];
+
+			if(obj && obj.path === imageData.path){
+				//var image = cc.Sprite.createWithBase64(imageData.base64);
+				var image = cc.Sprite.create(imageData.bluredImgPath);
+				//image.getTexture().setAntiAliasTexParameters();
+				obj.callBack(image);
+				index = i;
+			}
+
+		}
+
+		if(index != -1){
+			this.m_downLoadStack.splice(index, 1);
+		}
+	},
+
 	//处理图片下载完成
-	onDownImageSucess:function(url){
-		var index = 0;
+	onDownLoadImageSucess:function(url){
+		var index = -1;
 		for(var key in this.m_downLoadStack){
 			var obj = this.m_downLoadStack[key];
-			if(obj && obj.url === url){
+			if(obj && obj.url === url && !obj.blur){
 				//异步加载此图片
 				var filePath = st.js2java.checkImageExist(url);
 				this.loadImgAsync(filePath, obj.callBack);
 				index = key;
-
 				break;
+			}else if(obj && obj.url === url && obj.blur){
+				var filePath = st.js2java.checkImageExist(url);
+
+				var req = {};
+				req.path = filePath;
+				req.callBack = obj.callBack;
+				this.m_base64RequestStack.push(req);
+
+				st.js2java.getBlurImage(filePath);
+				index = key;
 			}
 		}
 
-		this.m_downLoadStack.splice(index, 1);
+		if(index != -1){
+			this.m_downLoadStack.splice(index, 1);
+		}
 	},
 
 	//每隔一定时间检查cache是否有要下载的图

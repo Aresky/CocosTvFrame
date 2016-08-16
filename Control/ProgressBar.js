@@ -13,7 +13,7 @@ st.Control.ProgressBar = st.Control.BaseControl.extend({
 
         var imgSize = backImg.getContentSize();
         backImg.setCapInsets(cc.rect(imgSize.width / 2, imgSize.height / 2, 1, 1));
-        frontImg.setCapInsets(cc.rect(imgSize.width / 2, imgSize.height / 2, 1, 1));
+        frontImg.setCapInsets(cc.rect(5, 5, 6, 4));
 
     	//背景
     	this.m_bg = backImg;
@@ -45,15 +45,27 @@ st.Control.ProgressBar = st.Control.BaseControl.extend({
         this.setPercent(0);
     },
 
+    //重置进度条
+    resetPercent:function(){
+        this.m_front.stopAllActions();
+        this.m_front.setScale(0.5, 1.0);
+        this.m_front.setVisible(false);
+    },
+
     //设置进度百分比，0 - 1
     setPercent:function(percent){
-        var speed = 0.05;//每秒0.3
+        var speed = 0.001;//每秒0.002
+        var percentOffset = Math.abs(percent - this.m_percent);
     	this.m_percent = percent;
     	if(this.m_percent === 0){
+            this.m_front.setScale(0.5, 1.0);
     		this.m_front.setVisible(false);
     	}else{
     		this.m_front.setVisible(true);
-            var scaleTo = cc.scaleTo(percent / speed, percent * (this.m_size.width / this.m_frontWidth), 1.0);
+            var scale_x = percent * (this.m_size.width / this.m_frontWidth);
+            scale_x = scale_x < 0.5 ? 0.5 : scale_x; 
+            var scaleTo = cc.scaleTo(percentOffset / speed, scale_x, 1.0);
+            this.m_front.stopAllActions();
             this.m_front.runAction(scaleTo.easing(cc.easeExponentialOut()));
     	}
     }

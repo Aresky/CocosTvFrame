@@ -424,7 +424,7 @@ st.Control.BaseListViewWidget = st.Control.BaseListViewWidget || cc.TableView.ex
             if (!cell) {
                 cell = this.createCell(idx);
             }
-            cell.onLostFocus();
+            //cell.onLostFocus();
             cell.updateCell(this.arrayModel[idx], idx);
 
         } catch (e) {
