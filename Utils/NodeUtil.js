@@ -27,7 +27,7 @@ st.NodeUtil.attachNodes = function(parentNode, childNode, posDesc, cfgObj) {
         childNode.setLocalZOrder(cfgObj.zOrder);
     }
 
-    if(cfgObj && cfgObj.tag){
+    if (cfgObj && cfgObj.tag) {
         childNode.setTag(cfgObj.tag);
     }
 
@@ -35,7 +35,7 @@ st.NodeUtil.attachNodes = function(parentNode, childNode, posDesc, cfgObj) {
 };
 
 //更新节点状态
-st.NodeUtil.updateNodeState = function (childNode, posDesc, cfgObj) {
+st.NodeUtil.updateNodeState = function(childNode, posDesc, cfgObj) {
     st.assert(childNode, 'attachNodes,need childNode', childNode);
 
     var parentNode = childNode.getParent();
@@ -52,7 +52,7 @@ st.NodeUtil.updateNodeState = function (childNode, posDesc, cfgObj) {
         childNode.setLocalZOrder(cfgObj.zOrder);
     }
 
-    if(cfgObj && cfgObj.tag){
+    if (cfgObj && cfgObj.tag) {
         childNode.setTag(cfgObj.tag);
     }
 };
@@ -281,23 +281,23 @@ st.NodeUtil.makeDebugBound = function(node) {
  * @param  {[type]} noReplaceAnchor 不替换锚点
  * @param  {[type]} noScale         不替换缩放
  */
-st.NodeUtil.replaceNode = function(parentNode, nodeTag, newNode, noReplaceAnchor, noScale){
-	var oldNode = parentNode.getChildByTag(nodeTag);
-	var newNodeAnchor = newNode.getAnchorPoint();
-	st.assert(oldNode, "xs.Utils.Node.replaceNode oldNode error!", nodeTag);
+st.NodeUtil.replaceNode = function(parentNode, nodeTag, newNode, noReplaceAnchor, noScale) {
+    var oldNode = parentNode.getChildByTag(nodeTag);
+    var newNodeAnchor = newNode.getAnchorPoint();
+    st.assert(oldNode, "xs.Utils.Node.replaceNode oldNode error!", nodeTag);
 
-	newNode.setPosition(oldNode.getPosition());
-	newNode.setTag(oldNode.getTag());
-	newNode.setLocalZOrder(oldNode.getLocalZOrder());
+    newNode.setPosition(oldNode.getPosition());
+    newNode.setTag(oldNode.getTag());
+    newNode.setLocalZOrder(oldNode.getLocalZOrder());
     newNode.setOpacity(oldNode.getOpacity());
-	if(!noScale){
-		newNode.setScale(oldNode.getScale());
-	}
-    if(!noReplaceAnchor){
+    if (!noScale) {
+        newNode.setScale(oldNode.getScale());
+    }
+    if (!noReplaceAnchor) {
         newNode.setAnchorPoint(oldNode.getAnchorPoint());
     }
-	oldNode.removeFromParent();
-	parentNode.addChild(newNode);
+    oldNode.removeFromParent();
+    parentNode.addChild(newNode);
 };
 
 //坐标系之间坐标转换
@@ -310,10 +310,10 @@ st.NodeUtil.convertPoint = function(targetNode, oriNode, pos) {
 }
 
 //立体焦点 @node 需要添加聚焦效果的node， @bAdd true为增加焦点，false为去掉焦点
-st.NodeUtil.setStereoFocus = function(node,type, duration, scaleValue) {
-	if(node.stereoFocused){
-		return;
-	}
+st.NodeUtil.setStereoFocus = function(node, type, duration, scaleValue) {
+    if (node.stereoFocused) {
+        return;
+    }
     node.stereoFocused = true;
 
     var board_tag = 1000;
@@ -325,7 +325,7 @@ st.NodeUtil.setStereoFocus = function(node,type, duration, scaleValue) {
         return;
     }
 
-    if(!scaleValue){
+    if (!scaleValue) {
         scaleValue = 1.08;
     }
 
@@ -335,18 +335,21 @@ st.NodeUtil.setStereoFocus = function(node,type, duration, scaleValue) {
 
     //边框
     var board = cc.Scale9Sprite.createWithSpriteFrameName("focusBoard.png");
-    var offset = cc.p(0,0);
-    switch(type){
+    var offset = cc.p(0, 0);
+    switch (type) {
         case "gameClass":
-        	board = st.Sprite({img:"res/gameClassification/touying.png",anchorPoint:cc.p(0.5,0.5)});
-        	offset = cc.p(20,10);
-        	break;
+            board = st.Sprite({
+                img: "res/gameClassification/touying.png",
+                anchorPoint: cc.p(0.5, 0.5)
+            });
+            offset = cc.p(20, 10);
+            break;
         default:
-        	board.setInsetLeft(100);
-    	    board.setInsetRight(100);
-    	    board.setInsetTop(100);
-    	    board.setInsetBottom(100);
-    	    break;
+            board.setInsetLeft(100);
+            board.setInsetRight(100);
+            board.setInsetTop(100);
+            board.setInsetBottom(100);
+            break;
     }
     board.setTag(board_tag);
     board.setLocalZOrder(10000);
@@ -377,28 +380,27 @@ st.NodeUtil.setStereoFocus = function(node,type, duration, scaleValue) {
         offset: cc.p(0, 0),
         sc: false
     });
-    
+
 
     var tempPos = node.getPosition();
     var anchor = node.getAnchorPoint();
-    var scaleOffset = cc.size(tempSize.width * (scaleValue - 1), 
-        (tempSize.width + bottom.getContentSize().height) * (scaleValue - 1));
-    var moveTo = cc.MoveTo.create(duration, cc.p(tempPos.x - (0.5 - anchor.x)*scaleOffset.width, 
-                                            tempPos.y + 50 + (anchor.y - 0.5)*scaleOffset.height));
+    var scaleOffset = cc.size(tempSize.width * (scaleValue - 1), (tempSize.width + bottom.getContentSize().height) * (scaleValue - 1));
+    var moveTo = cc.MoveTo.create(duration, cc.p(tempPos.x - (0.5 - anchor.x) * scaleOffset.width,
+        tempPos.y + 50 + (anchor.y - 0.5) * scaleOffset.height));
 
     var scale = cc.ScaleTo.create(duration, scaleValue);
     node.runAction(cc.Spawn.create(moveTo, scale));
 
-    node.setLocalZOrder(node.getLocalZOrder()+1);
+    node.setLocalZOrder(node.getLocalZOrder() + 1);
 }
 
 //取消立体焦点效果
 st.NodeUtil.unStereoFocus = function(node, duration) {
-    if(!node.stereoFocused){
+    if (!node.stereoFocused) {
         return;
     }
     node.stereoFocused = false;
-    
+
     var board_tag = 1000;
     var bottom_tag = 1001;
     var board = node.getChildByTag(board_tag);
@@ -414,14 +416,14 @@ st.NodeUtil.unStereoFocus = function(node, duration) {
         node.runAction(cc.Spawn.create(moveTo, scale));
 
 
-        if(node.getLocalZOrder() > 0){
+        if (node.getLocalZOrder() > 0) {
             node.setLocalZOrder(node.oldZOrder);
         }
     }
 }
 
-st.NodeUtil.setFocused = function(node, actiontType){
-    if(node.stereoFocused){
+st.NodeUtil.setFocused = function(node, actiontType) {
+    if (node.stereoFocused) {
         return;
     }
     node.stereoFocused = true;
@@ -447,29 +449,29 @@ st.NodeUtil.setFocused = function(node, actiontType){
 
     st.attachNodes(node, board, {
         desc: "c",
-        offset: cc.p(0 , 0),
+        offset: cc.p(0, 0),
         sc: false
     });
 
     var tempPos = node.getPosition();
     var anchor = node.getAnchorPoint();
     var scaleOffset = cc.size(tempSize.width * (scaleValue - 1), tempSize.height * (scaleValue - 1));
-    var moveTo = cc.MoveTo.create(duration, cc.p(tempPos.x - (0.5 - anchor.x)*scaleOffset.width, 
-                                            tempPos.y + (anchor.y - 0.5)*scaleOffset.height));
-    
+    var moveTo = cc.MoveTo.create(duration, cc.p(tempPos.x - (0.5 - anchor.x) * scaleOffset.width,
+        tempPos.y + (anchor.y - 0.5) * scaleOffset.height));
+
     var scale = cc.ScaleTo.create(duration, scaleValue);
     cc.director.getActionManager().removeAllActionsFromTarget(node);
     node.runAction(cc.Spawn.create(moveTo, scale).clone().easing(cc.easeExponentialOut()));
 
-    node.setLocalZOrder(node.getLocalZOrder()+1);
+    node.setLocalZOrder(node.getLocalZOrder() + 1);
 },
 
-st.NodeUtil.setUnFocused = function(node){
-    if(!node.stereoFocused){
+st.NodeUtil.setUnFocused = function(node) {
+    if (!node.stereoFocused) {
         return;
     }
     node.stereoFocused = false;
-    
+
     var duration = 0.5;
     var board_tag = 1000;
     var board = node.getChildByTag(board_tag);
@@ -483,14 +485,14 @@ st.NodeUtil.setUnFocused = function(node){
         cc.director.getActionManager().removeAllActionsFromTarget(node);
         node.runAction(cc.Spawn.create(moveTo, scale).clone().easing(cc.easeExponentialOut()));
 
-        if(node.getLocalZOrder() > 0){
+        if (node.getLocalZOrder() > 0) {
             node.setLocalZOrder(node.oldZOrder);
         }
     }
 },
 
-st.NodeUtil.clearFocusInfo = function(node){
-    if(!node.stereoFocused){
+st.NodeUtil.clearFocusInfo = function(node) {
+    if (!node.stereoFocused) {
         return;
     }
     node.stereoFocused = false;
@@ -505,7 +507,7 @@ st.NodeUtil.clearFocusInfo = function(node){
         node.setScale(1.0);
         node.setPosition(tempPos);
 
-        if(node.getLocalZOrder() > 0){
+        if (node.getLocalZOrder() > 0) {
             node.setLocalZOrder(node.oldZOrder);
         }
     }
@@ -527,7 +529,7 @@ st.NodeUtil.clearFocusInfo = function(node){
 //屏幕截图
 //@lbPoint  截图起始点左下角坐标
 //@blurSize 截图尺寸
-st.NodeUtil.screenShot = function(lbPoint, blurSize){
+st.NodeUtil.screenShot = function(lbPoint, blurSize) {
     var winSize = cc.winSize;
     var curScene = cc.director.getRunningScene();
 
@@ -538,13 +540,13 @@ st.NodeUtil.screenShot = function(lbPoint, blurSize){
 
     var ret = rend.saveToFile("shot.jpg", cc.IMAGE_FORMAT_JPEG);
 
-    if(ret){
+    if (ret) {
         jsb.fileUtils.addSearchPath(jsb.fileUtils.getWritablePath());
         //return cc.Sprite.create(jsb.fileUtils.fullPathForFilename("shot.jpg"));
     }
 
-    return cc.Sprite.createWithTexture(rend.getSprite().getTexture(), 
-                cc.rect(lbPoint.x, lbPoint.y, blurSize.width, blurSize.height), false);
+    return cc.Sprite.createWithTexture(rend.getSprite().getTexture(),
+        cc.rect(lbPoint.x, lbPoint.y, blurSize.width, blurSize.height), false);
 }
 
 /**
@@ -552,10 +554,10 @@ st.NodeUtil.screenShot = function(lbPoint, blurSize){
  * @_sprite  图片地址或者sprite对象
  * @cultForScreen boolean 是否剪裁以适应屏幕分辨率
  */
-st.NodeUtil.blurSpriteWithPath = function(_sprite, cultForScreen){
+st.NodeUtil.blurSpriteWithPath = function(_sprite, cultForScreen) {
 
     //测试用高斯模糊算法
-    var gaussianBlurShader = function(){
+    var gaussianBlurShader = function() {
         var shader = cc.GLProgram.create("res/shader/blur.vsh", "res/shader/gaussian_blur.fsh");
         shader.retain();
         shader.addAttribute(cc.ATTRIBUTE_NAME_POSITION, cc.VERTEX_ATTRIB_POSITION);
@@ -564,29 +566,29 @@ st.NodeUtil.blurSpriteWithPath = function(_sprite, cultForScreen){
         shader.link();
         shader.updateUniforms();
 
-        return shader;        
+        return shader;
     };
 
-    if( 'opengl' in cc.sys.capabilities ) {
+    if ('opengl' in cc.sys.capabilities) {
         var sprite = null;
-        if(_sprite instanceof cc.Sprite){
+        if (_sprite instanceof cc.Sprite) {
             sprite = _sprite;
-        }else if(_sprite instanceof String){
+        } else if (_sprite instanceof String) {
             sprite = cc.Sprite.create(spritePath);
-        }else{
+        } else {
             return null;
         }
 
-        var textureSize = cc.size(sprite.getContentSize().width * sprite.getScaleX(), 
+        var textureSize = cc.size(sprite.getContentSize().width * sprite.getScaleX(),
             sprite.getContentSize().height * sprite.getScaleY());
 
-    
+
         var blurShader = gaussianBlurShader();
         sprite.setShaderProgram(blurShader);
         sprite.setAnchorPoint(cc.p(0, 0));
         var rend = new cc.RenderTexture(textureSize.width, textureSize.height);
         if (!rend) return null;
-    
+
         rend.begin();
         sprite.visit();
         rend.end();
@@ -603,14 +605,14 @@ st.NodeUtil.blurSpriteWithPath = function(_sprite, cultForScreen){
         //     // st.dump("filePath", jsb.fileUtils.fullPathForFilename("render.png"));
         //     return cc.Sprite.create(jsb.fileUtils.getWritablePath()+"/render.png");
         // }
-        
+
         var rect = cc.rect(0, 0, textureSize.width, textureSize.height);
-        if(cultForScreen){
+        if (cultForScreen) {
             rect = st.NodeUtil.cultForScreen(textureSize);
         }
 
         rend.getSprite().getTexture().setAntiAliasTexParameters();
-        var ret = cc.Sprite.createWithTexture(rend.getSprite().getTexture(), 
+        var ret = cc.Sprite.createWithTexture(rend.getSprite().getTexture(),
             rect, false);
         ret.setFlippedY(true);
         return ret;
@@ -619,22 +621,22 @@ st.NodeUtil.blurSpriteWithPath = function(_sprite, cultForScreen){
 
 /**
  * 裁剪出适应屏幕分辨率的尺寸
- * @return {[rect]} 
+ * @return {[rect]}
  */
-st.NodeUtil.cultForScreen = function(originSize){
+st.NodeUtil.cultForScreen = function(originSize) {
     var width = cc.winSize.width;
     var height = cc.winSize.height;
 
     var visibleWidth = originSize.width;
     var visibleHeight = originSize.height;
-    
+
     var visibelLeft = 0;
     var visibleTop = 0;
 
-    if ( originSize.width * height  > width * originSize.height ) {
+    if (originSize.width * height > width * originSize.height) {
         visibleWidth = originSize.height * width / height;
         visibleHeight = originSize.height;
-    } else if ( originSize.width * height  < width * originSize.height ) {
+    } else if (originSize.width * height < width * originSize.height) {
         visibleWidth = originSize.width;
         visibleHeight = originSize.width * height / width;
     }
@@ -646,7 +648,7 @@ st.NodeUtil.cultForScreen = function(originSize){
 },
 
 //sprite倒影特效处理
-st.NodeUtil.invertedSprite = function(_sprite){
+st.NodeUtil.invertedSprite = function(_sprite) {
     var textureSize = _sprite.getContentSize();
     var shader = cc.GLProgram.create("res/shader/blur.vsh", "res/shader/test.fsh");
     shader.retain();
@@ -658,4 +660,27 @@ st.NodeUtil.invertedSprite = function(_sprite){
 
     _sprite.setShaderProgram(shader);
 
+},
+
+/**
+ * 未完成 TODO
+ * [DrawRoundRect 绘制圆角矩形] 参考：http://www.tuicool.com/articles/FrQRJjM 
+ * @param {[point]} origin      [七点坐标]
+ * @param {[point]} destination [目的坐标]
+ * @param {[number]} radius      [圆角半径]
+ * @param {[number]} segments    [圆角绘制段数]
+ * @return {[Node]} 返回一个绘制完成的圆角矩形
+ */
+st.NodeUtil.DrawRoundRect = function(origin, destination, radius, segments) {
+    //算出1/4圆
+    var coef = 0.5 * Math.PI / segments;
+    var vertices = new Array(segments + 1);
+    var thisVertices = vertices;
+    for (var i = 0; i <= segments; ++i) {
+        var rads = (segments - i) * coef;
+        //thisVertices - > x = (int)(radius * sinf(rads));
+        //thisVertices - > y = (int)(radius * cosf(rads));
+        thisVertices[i].x = radius * sinf(rads)
+    }
 }
+
