@@ -191,6 +191,7 @@ st.Control.BaseListView = cc.Node.extend({
         return this.m_listWidget.cellAtIndex(dataIdx);
     },
 
+    //触摸出发支持
     onTableCellClick: function(dataIdx) {
         if(this.onCellClickedListener){
             this.onCellClickedListener(dataIdx, this.m_focusCellIdx);
@@ -424,7 +425,7 @@ st.Control.BaseListViewWidget = st.Control.BaseListViewWidget || cc.TableView.ex
             if (!cell) {
                 cell = this.createCell(idx);
             }
-            //cell.onLostFocus();
+            cell.onLostFocus();
             cell.updateCell(this.arrayModel[idx], idx);
 
         } catch (e) {

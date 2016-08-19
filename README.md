@@ -6,9 +6,12 @@
 "src/CocosTvFrame/Control/BaseScene.js",
 "src/CocosTvFrame/Control/ProgressBar.js",
 "src/CocosTvFrame/Control/AutoTextLabel.js",
+<<<<<<< HEAD
 "src/CocosTvFrame/Control/Button/Button.js",
 "src/CocosTvFrame/Control/Button/ScaleButton.js",
 "src/CocosTvFrame/Control/Button/IconButton.js",
+=======
+>>>>>>> 0a0e514b78e16e27087024d2659af7e0573a79f2
 "src/CocosTvFrame/Control/BaseListView/BaseListCell.js",
 "src/CocosTvFrame/Control/BaseListView/BaseListView.js",
 "src/CocosTvFrame/Control/BaseGridView/BaseGridView.js",
