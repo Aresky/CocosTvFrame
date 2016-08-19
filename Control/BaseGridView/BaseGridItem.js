@@ -133,7 +133,7 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
      * 设置列item的焦点
      * @param  {bool} direction 方向 true为left, false为right
      */
-    updateColumnItemPos: function(direction, cb) {
+    updateColumnItemPos: function(direction) {
         var oldItem = null;
         var newItem = null;
         if (direction && this.m_columnItemFocusIdx > 0) {
@@ -150,18 +150,18 @@ st.Control.BaseGridItem = cc.TableViewCell.extend({
             oldItem.onLostFocus();
         }
         if (newItem) {
-            newItem.onGetFocus(cb);
+            newItem.onGetFocus();
         }
     },
 
-    dispatchEvent: function(event, cb) {
+    dispatchEvent: function(event) {
         var eventKey = event.getEvent();
         switch (eventKey) {
             case st.KeyEvent_Left:
-                this.updateColumnItemPos(true, cb);
+                this.updateColumnItemPos(true);
                 break;
             case st.KeyEvent_Right:
-                this.updateColumnItemPos(false, cb);
+                this.updateColumnItemPos(false);
                 break;
         }
     } 

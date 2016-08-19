@@ -63,11 +63,19 @@ st.SceneManage = {
 
 		//获取当前显示的的场景信息（类和对象）
 		getCurScene: function() {
+			if(this.m_sceneStack.length <= 0){
+				return null;
+			}
 			return this.m_sceneStack[this.m_sceneStack.length - 1];
 		},
 
 		//获取当前现实的场景对象
 		getCurSceneObj: function() {
+
+			if(this.m_sceneStack.length <= 0){
+				return null;
+			}
+
 			return this.m_sceneStack[this.m_sceneStack.length - 1].sceneObj;
 		},
 

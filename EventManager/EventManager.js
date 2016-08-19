@@ -55,14 +55,20 @@ st.EventManager = {
 					curScene.dispatchEvent(event);
 				}
 			}
+
+			if(curScene instanceof st.Scene.MusicPlayerScene){
+				return;
+			}
 			//临时的，for微鲸本地播放的旧按键响应逻辑
-			if(! (curScene instanceof st.Scene.MusicPlayerScene)){
+			//if(! (curScene instanceof st.Scene.MusicPlayerScene)){
 				if(_listLayer){
+					 
 					_listLayer.dispatchEvent(event);
 				} else {
+					 
 					keyController.keyDown(event.getKey());
 				}
-			}
+			//}
 			
 		}
 	},

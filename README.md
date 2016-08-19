@@ -5,6 +5,7 @@
 "src/CocosTvFrame/Control/Base.js",
 "src/CocosTvFrame/Control/BaseScene.js",
 "src/CocosTvFrame/Control/ProgressBar.js",
+"src/CocosTvFrame/Control/AutoTextLabel.js",
 "src/CocosTvFrame/Control/BaseListView/BaseListCell.js",
 "src/CocosTvFrame/Control/BaseListView/BaseListView.js",
 "src/CocosTvFrame/Control/BaseGridView/BaseGridView.js",
